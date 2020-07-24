@@ -1,0 +1,42 @@
+#baloon {
+	transform: rotate(-90deg);
+}
+
+body {
+	background-color: #FFFFFF;
+	font-family: "Arial", sans-serif;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.ddt-selection {
+	border-style: solid;
+	border-width: 4px;
+	
+	width: 200px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+	font-size: 2rem;
+}
+
+.ddt-selection:first-child {
+	border-right-width: 2px;
+}
+
+.ddt-selection:last-child {
+	border-left-width: 2px;
+}
+
+.debug-display {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-style: dashed;
+	border-width: 2px;
+	padding: 2px;|
+}
+
+.green-border {
+	border-color: green;
+}

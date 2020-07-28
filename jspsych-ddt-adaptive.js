@@ -145,7 +145,11 @@ function setup_ddt_adaptive_task() {
                 data.choice = 'timeout';
                 jsPsych.endCurrentTimeline();
                 return;
-            }           
+            }   
+
+            if (data.trialType == 'responseFeedback') {
+                return;
+            }          
 
         	var trialTrend = trend.NONE;
         	

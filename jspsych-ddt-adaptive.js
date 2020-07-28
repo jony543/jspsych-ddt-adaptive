@@ -74,6 +74,36 @@ function setup_ddt_adaptive_task() {
                 },
                 trial_duration: (settings.trialResponseTime > 0)? settings.trialResponseTime : undefined,
                 choices: [ settings.leftSelectionKeyCode, settings.rightSelectionKeyCode ],
+                on_finish: function(data) {
+                    if (!data.key_press) {
+                        data.choice = 'timeout';
+                        jsPsych.endCurrentTimeline();
+                        return;
+                    }        
+
+                    var trialTrend = trend.NONE;
+                    
+                    if ((data.llr_side == 'left' && data.key_press == settings.leftSelectionKeyCode) 
+                        || (data.llr_side == 'right' && data.key_press == settings.rightSelectionKeyCode)) {
+                        data.choice = 'llr';
+                        trialTrend = trend.DOWN;
+                        k_data[data.timeSpan].k = Math.max(0, k_data[data.timeSpan].k-k_data[data.timeSpan].increament);
+                    } else {
+                        data.choice = 'ssr';
+                        trialTrend = trend.UP;
+                        k_data[data.timeSpan].k += k_data[data.timeSpan].increament;
+                    }
+
+                    if (trialTrend != k_data[data.timeSpan].trend) {
+                        k_data[data.timeSpan].trend = trialTrend;
+                        k_data[data.timeSpan].trendChanges += 1;
+                        if (k_data[data.timeSpan].trendChanges < settings.maxTrendChanges) {
+                            k_data[data.timeSpan].increament = settings.kIncreaments[k_data[data.timeSpan].trendChanges];
+                        } else {
+                            availableTimeSpans = availableTimeSpans.filter(t => t != data.timeSpan);
+                        }
+                    }
+                },
             },
             {
                 data: {
@@ -140,40 +170,6 @@ function setup_ddt_adaptive_task() {
 
     		trial.stimulus = html;    	    	
       	},        
-        on_finish: function(data) {
-            if (!data.key_press) {
-                data.choice = 'timeout';
-                jsPsych.endCurrentTimeline();
-                return;
-            }   
-
-            if (data.trialType == 'responseFeedback') {
-                return;
-            }          
-
-        	var trialTrend = trend.NONE;
-        	
-        	if ((data.llr_side == 'left' && data.key_press == settings.leftSelectionKeyCode) 
-                || (data.llr_side == 'right' && data.key_press == settings.rightSelectionKeyCode)) {
-        		data.choice = 'llr';
-        		trialTrend = trend.DOWN;
-        		k_data[data.timeSpan].k = Math.max(0, k_data[data.timeSpan].k-k_data[data.timeSpan].increament);
-        	} else {
-        		data.choice = 'ssr';
-        		trialTrend = trend.UP;
-        		k_data[data.timeSpan].k += k_data[data.timeSpan].increament;
-        	}
-
-        	if (trialTrend != k_data[data.timeSpan].trend) {
-        		k_data[data.timeSpan].trend = trialTrend;
-        		k_data[data.timeSpan].trendChanges += 1;
-    			if (k_data[data.timeSpan].trendChanges < settings.maxTrendChanges) {
-    				k_data[data.timeSpan].increament = settings.kIncreaments[k_data[data.timeSpan].trendChanges];
-    			} else {
-    				availableTimeSpans = availableTimeSpans.filter(t => t != data.timeSpan);
-    			}
-        	}
-        },
     };
 
     var responseFasterMessage = {

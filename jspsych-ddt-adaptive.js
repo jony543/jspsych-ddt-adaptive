@@ -128,7 +128,7 @@ function setup_ddt_adaptive_task() {
             	trial.data.k = k_data[trial.data.timeSpan].k;
             	trial.data.ssr_value = 10;
 
-                var roundHalf = k_data[trial.data.timeSpan.trendChanges >= 3;
+                var roundHalf = k_data[trial.data.timeSpan].trendChanges >= 3;
             	trial.data.llr_value = 
                     getLLRvalue(trial.data.ssr_value, k_data[trial.data.timeSpan].k, trial.data.timeSpan, roundHalf);
                     

@@ -33,8 +33,8 @@ function setup_ddt_adaptive_task() {
     	}
     }
 
-    function getLLRvalue(ssr_value, k, d) {
-    	return Math.floor(ssr_value * (1 + k * d));
+    function getLLRvalue(ssr_value, k, d, roundHalf) {
+    	return (!!roundHalf) ? Math.floor(2 * ssr_value * (1 + k * d)) / 2 : Math.floor(ssr_value * (1 + k * d));
     }
 
     var timeline = [];
@@ -127,7 +127,11 @@ function setup_ddt_adaptive_task() {
             	trial.data.timeSpan = jsPsych.randomization.sampleWithReplacement(availableTimeSpans, 1)[0];
             	trial.data.k = k_data[trial.data.timeSpan].k;
             	trial.data.ssr_value = 10;
-            	trial.data.llr_value = getLLRvalue(trial.data.ssr_value, k_data[trial.data.timeSpan].k, trial.data.timeSpan) ;
+
+                var roundHalf = k_data[trial.data.timeSpan.trendChanges >= 3;
+            	trial.data.llr_value = 
+                    getLLRvalue(trial.data.ssr_value, k_data[trial.data.timeSpan].k, trial.data.timeSpan, roundHalf);
+                    
                 trial.data.llr_side = (Math.random() < 0.5) ? 'right': 'left';
             }
 
